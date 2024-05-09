@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <title>Test</title>
+    <link rel="stylesheet" type="text/css" href="Style.css" />
+  </head>
+  <body>
+    <div id="gameContainer">
+      <!-- Your board div here -->
+      <!-- Your button div here -->
+      <div class="board">
+        
+          <div class="row" id="row1">
+            <div class="inputBox inputBox1" id="box1"></div>
+            <div class="inputBox inputBox2" id="box2"></div>
+            <div class="inputBox inputBox3" id="box3"></div>
+          </div>
+          <div class="row" id="row2">
+            <div class="inputBox inputBox1" id="box1"></div>
+            <div class="inputBox inputBox2" id="box2"></div>
+            <div class="inputBox inputBox3" id="box3"></div>
+          </div>
+          <div class="row" id="row3">
+            <div class="inputBox inputBox1" id="box1"></div>
+            <div class="inputBox inputBox2" id="box2"></div>
+            <div class="inputBox inputBox3" id="box3"></div>
+          </div>
+          <div id="winState"></div>
+      </div>
+      <div class="buttons">
+        <button id="reset" onclick="resetBoard()">
+          <img
+            src="https://static-00.iconduck.com/assets.00/reset-double-icon-2048x1781-b5a2nrrh.png"
+            width="75"
+            class = "invert"
+          />
+        </button>
+      </div>
+  </div>
+    
+    <div id="outputx"></div>
+    <div id="outputy"></div>
+    <div id="output"></div>
+    <script src="Index.js"></script>
+  </body>
+</html>
