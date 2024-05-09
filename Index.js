@@ -33,10 +33,18 @@ function play() {
     if (board[posY][posX].innerText === '') {
         board[posY][posX].innerText = player;
         player = player == 'X' ? 'O' : 'X';
-        if (checkWin()) {
-            winState();
-        }
+        checkEnd();
     }
+}
+
+function checkEnd(){
+    if (checkWin()) {
+        winState();
+        return;
+    }else if (checkDraw()){
+        drawState();
+        return;
+    };
 }
 
 function getPos(target) {
@@ -86,6 +94,17 @@ function checkWin(){
     return false;
 }
 
+function checkDraw(){
+    for (var i = 0; i < 3; i++) {
+        for (var j = 0; j < 3; j++) {
+            if (board[i][j].innerText === '') {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 function winState(){
     winStateDiv.innerText = winner + ' wins!';
     winStateDiv.style.display = 'block';
@@ -99,5 +118,19 @@ function winState(){
         resetBoard();
     }, 2000);
     
+}
+
+function drawState(){
+    winStateDiv.innerText = 'Draw!';
+    winStateDiv.style.display = 'block';
+    isWin = true;
+    if (winStateDiv.innerText.trim() !== '') {
+        winStateDiv.classList.add('hasText');
+    } else {
+        winStateDiv.classList.remove('hasText');
+    }
+    setTimeout(function(){
+        resetBoard();
+    }, 2000);
 }
 
