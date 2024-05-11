@@ -16,6 +16,8 @@ body {
     align-items: center;
 }
 
+
+
 .board {
     width: 48vh;
     height: 48vh;
@@ -71,18 +73,39 @@ button:hover {
     grid-template-columns: repeat(3, 1fr);
 }
 
+.row:first-child .inputBox:nth-child(1),
+.row:first-child .inputBox:nth-child(2),
+.row:first-child .inputBox:nth-child(3) {
+    border-top : 0;
+}
+
+.row:nth-child(3) .inputBox:nth-child(1),
+.row:nth-child(3) .inputBox:nth-child(2),
+.row:nth-child(3) .inputBox:nth-child(3) {
+    border-bottom: 0;
+}
+
+.row .inputBox:first-child {
+    border-left: 0;    
+}
+
+.row .inputBox:last-child {
+    border-right:rgba(173, 173, 173, 0.493);
+}
+
 .inputBox {
     width: 16vh;
     height: 16vh;
-    border: 1px solid black;
-    background-color: rgb(255, 255, 255);
-    font-size: 12vh;
+    border: 2px solid rgb(202, 202, 202);
+    /* background-color: rgb(255, 255, 255); */
+    /* font-size: 12vh; */
+    font-size: 4vh;
     /* align vertical and horizonal */
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: initial;
-    color: black;
+    color: rgb(230, 230, 230);
     cursor: pointer;
     overflow: hidden;
 }
@@ -97,20 +120,17 @@ button:hover {
     top: 50%;
     left: 50.5%;
     width: 40vh;
-    transform: translate(-50%, -320%);
+    transform: translate(-50%, -71%);
+    border: 0px solid black;
     z-index: 10;
     font-size: 7vh;
-
-    background-color: rgb(173, 173, 173);
+    background-color: rgba(173, 173, 173, 0.493);
+    backdrop-filter: blur(5px);
     border-radius: 10px;
     font-weight: bold;
     text-align: center;
+    
     font-family: "roboto", sans-serif;
     color: white;
 
 }
-
-#winState.hasText {
-    border : 2px solid rgb(134, 134, 134);
-}
-

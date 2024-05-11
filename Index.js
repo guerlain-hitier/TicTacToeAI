@@ -4,13 +4,9 @@ var board = [
     []
 ];
 
-var posX;
-var posY;
-var player = 'X';
-var winner;
-var winStateDiv = document.getElementById('winState');
-var isWin = false;
-
+const human = 'X';
+const ai = 'O';
+var player = human;
 
 for (var i = 0; i < 3; i++) {
 
@@ -20,36 +16,85 @@ for (var i = 0; i < 3; i++) {
         board[i].push(currentRow[j]);
         board[i][j].innerText = '';
         board[i][j].addEventListener('click', function(event) {
-            getPos(event.target);
-            //check if winState display is visible
-            if (!isWin){ play(); }
+            place(getPos(event.target), player);
+            player = ai;
+            place(bestMove(), player);
+            player = human;
         });
     }
-
-
 }
 
-function play() {
-    if (board[posY][posX].innerText === '') {
-        board[posY][posX].innerText = player;
-        player = player == 'X' ? 'O' : 'X';
-        checkEnd();
+function bestMove() {
+    let bestScore = -Infinity;
+    let move;
+    for (var i = 0; i < 3; i++) {
+        for (var j = 0; j < 3; j++) {
+            if (board[i][j].innerText === '') {
+                board[i][j].innerText = ai;
+                let score = minimax(board, 0, false);
+                board[i][j].innerText = '';
+                if (score > bestScore) {
+                    bestScore = score;
+                    move = {i, j};
+                }
+            }
+        }
+    }
+    return move;
+}
+
+values = {
+    X: -1,
+    O: 1,
+    tie: 0
+}
+
+async function minimax(board, depth, isMaximizing) {
+    let result = checkWinner();
+    if (result !== null) {
+        return values[result];
+    }
+
+    if (isMaximizing) {
+        let bestScore = -Infinity;
+        for (var i = 0; i < 3; i++) {
+            for (var j = 0; j < 3; j++) {
+                if (board[i][j].innerText === '') {
+                    board[i][j].innerText = ai;
+                    await new Promise(r => setTimeout(r, 1000));
+                    let score = minimax(board, depth + 1, false);
+                    board[i][j].innerText = '';
+                    bestScore = Math.max(score, bestScore);
+
+                }
+            }
+        }
+        return bestScore;
+    } else {
+        let bestScore = Infinity;
+        for (var i = 0; i < 3; i++) {
+            for (var j = 0; j < 3; j++) {
+                if (board[i][j].innerText === '') {
+                    board[i][j].innerText = human;
+                    await new Promise(r => setTimeout(r, 0));
+                    let score = minimax(board, depth + 1, true);
+                    board[i][j].innerText = '';
+                    bestScore = Math.min(score, bestScore);
+                }
+            }
+        }
+        return bestScore;
     }
 }
 
-function checkEnd(){
-    if (checkWin()) {
-        winState();
-        return;
-    }else if (checkDraw()){
-        drawState();
-        return;
-    };
+function place(pos, player) {
+    board[pos.y][pos.x].innerText = player;
 }
 
 function getPos(target) {
-    posX = target.id[3] - 1;
-    posY = target.parentElement.id[3] - 1;
+    let x = target.id[3] - 1;
+    let y = target.parentElement.id[3] - 1;
+    return {x, y};
 }
 
 function resetBoard(){
@@ -59,78 +104,32 @@ function resetBoard(){
         }
     }
     player = 'X';
-    winStateDiv.style.display = 'none';
-    isWin = false;
 }
 
-function checkWin(){
-    //rows 
+function checkWinner(){
+    // Check rows
     for (var i = 0; i < 3; i++) {
         if (board[i][0].innerText === board[i][1].innerText && board[i][1].innerText === board[i][2].innerText && board[i][0].innerText !== '') {
-            winner = board[i][0].innerText;
-            return true;
+            return board[i][0].innerText;
         }
     }
 
-    //columns
+    // Check columns
     for (var i = 0; i < 3; i++) {
         if (board[0][i].innerText === board[1][i].innerText && board[1][i].innerText === board[2][i].innerText && board[0][i].innerText !== '') {
-            winner = board[0][i].innerText;
-            return true;
+            return board[0][i].innerText;
         }
     }
 
-    //diagonals
+    // Check diagonals
     if (board[0][0].innerText === board[1][1].innerText && board[1][1].innerText === board[2][2].innerText && board[0][0].innerText !== '') {
-        winner = board[0][0].innerText;
-        return true;
+        return board[0][0].innerText;
     }
 
     if (board[0][2].innerText === board[1][1].innerText && board[1][1].innerText === board[2][0].innerText && board[0][2].innerText !== '') {
-        winner = board[0][2].innerText;
-        return true;
+        return board[0][2].innerText;
     }
 
-    return false;
-}
-
-function checkDraw(){
-    for (var i = 0; i < 3; i++) {
-        for (var j = 0; j < 3; j++) {
-            if (board[i][j].innerText === '') {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
-function winState(){
-    winStateDiv.innerText = winner + ' wins!';
-    winStateDiv.style.display = 'block';
-    isWin = true;
-    if (winStateDiv.innerText.trim() !== '') {
-        winStateDiv.classList.add('hasText');
-    } else {
-        winStateDiv.classList.remove('hasText');
-    }
-    setTimeout(function(){
-        resetBoard();
-    }, 2000);
-    
-}
-
-function drawState(){
-    winStateDiv.innerText = 'Draw!';
-    winStateDiv.style.display = 'block';
-    isWin = true;
-    if (winStateDiv.innerText.trim() !== '') {
-        winStateDiv.classList.add('hasText');
-    } else {
-        winStateDiv.classList.remove('hasText');
-    }
-    setTimeout(function(){
-        resetBoard();
-    }, 2000);
+    return null;
 }
 
